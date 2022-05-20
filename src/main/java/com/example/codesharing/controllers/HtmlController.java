@@ -1,23 +1,38 @@
 package com.example.codesharing.controllers;
 
-import com.example.codesharing.applicationLogic.DataTimeClass;
-import com.example.codesharing.auxiliary.CodeDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-
+import java.util.Map;
+@Component
 @Controller
 @Validated
 public class HtmlController {
+    private final CodeShareController codeShareController;
 
-    @GetMapping("/code")
-    public String getCode(Model model) {
-        String code = CodeDTO.getCode();
-        String dataTime = DataTimeClass.getCurrentDateTime();
+    @Autowired
+    public HtmlController(CodeShareController codeShareController) {
+        this.codeShareController = codeShareController;
+    }
+
+    @GetMapping("/code/{id}")
+    public String getCode(@PathVariable("id") int id, Model model) {
+        String code = "";
+        String dataTime = "";
+
+        for (Map.Entry<String, String> entry : codeShareController.getAddOtherCode().get(id).entrySet()) {
+            code = entry.getKey();
+            dataTime = entry.getValue();
+        }
+
         model.addAttribute("code", code);
-        model.addAttribute("dataTime",dataTime);
+        model.addAttribute("dataTime", dataTime);
+
         return "getCode";
     }
 

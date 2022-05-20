@@ -3,33 +3,38 @@ package com.example.codesharing.controllers;
 import com.example.codesharing.applicationLogic.CodeSnippet;
 import com.example.codesharing.applicationLogic.DataTimeClass;
 import com.example.codesharing.auxiliary.CodeDTO;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Data
 @RestController
 public class CodeShareController {
+    private final Map<Integer, Map<String, String>> addOtherCode = new LinkedHashMap<>();
 
-    @GetMapping("/api/code")
-    public ResponseEntity<?> justGetCode() {
-        Map<String, String> getCodeWithDate = new LinkedHashMap<>();
-        getCodeWithDate.put("code", CodeDTO.getCode());
-        getCodeWithDate.put("date", DataTimeClass.getCurrentDateTime());
 
-        return new ResponseEntity<>(getCodeWithDate, HttpStatus.OK);
+    @GetMapping("/api/code/{id}")
+    @ResponseBody
+    public ResponseEntity<?> justGetCode(@PathVariable("id") int id) {
+        return new ResponseEntity<>(getAddOtherCode().get(id), HttpStatus.OK);
     }
 
     @PostMapping("/api/code/new")
     public ResponseEntity<?> putCode(@RequestBody CodeSnippet code) {
-        DataTimeClass.setLocalDateTime();
         CodeDTO.setCode(code.getCODE());
+        DataTimeClass.setLocalDateTime();
+        Map<String, String> getCurrentCode = new LinkedHashMap<>();
 
-        return new ResponseEntity<>(new CodeShareController(), HttpStatus.OK);
+        getCurrentCode.put("code", CodeDTO.getCode());
+        getCurrentCode.put("data", DataTimeClass.getCurrentDateTime());
+
+        getAddOtherCode().put(CodeDTO.inc(), getCurrentCode);
+
+
+        return new ResponseEntity<>(Map.of("id", CodeDTO.getInc()), HttpStatus.OK);
     }
 }
