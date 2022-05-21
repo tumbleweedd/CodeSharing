@@ -39,9 +39,9 @@
         </li>
 
         <div id="oneCode">
-            <#list latestCode as key >
+            <#list latestCode as key, value>
                 <span id="load_date">
-                    ${key}
+                    ${value}
                </span>
                 <pre id="code_snippet" align="left">
                     ${key}

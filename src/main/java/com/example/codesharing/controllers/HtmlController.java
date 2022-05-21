@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Component
@@ -21,6 +22,8 @@ public class HtmlController {
         this.codeShareController = codeShareController;
     }
 
+
+
     @GetMapping("/code/{id}")
     public String getCode(@PathVariable("id") int id, Model model) {
         for (Map.Entry<String, String> entry : codeShareController.getAddOtherCode().get(id).entrySet()) {
@@ -31,7 +34,11 @@ public class HtmlController {
     }
     @GetMapping("/code/latest")
     public String getLatestCode(Model model) {
-        model.addAttribute("latestCode", codeShareController.getLatestCodeList());
+        Map<String, String> map = new LinkedHashMap<>();
+        for (Map<String, String> stringMap : codeShareController.getLatestCodeList()) {
+            map.putAll(stringMap);
+        }
+        model.addAttribute("latestCode", map);
         return "getLatestCode";
     }
 

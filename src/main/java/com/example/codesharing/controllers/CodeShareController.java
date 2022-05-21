@@ -36,20 +36,15 @@ public class CodeShareController {
         getCurrentCode.put(CodeDTO.getCode(), DataTimeClass.getCurrentDateTime());
         addOtherCode.put(CodeDTO.inc(), getCurrentCode);
 
+        latestCodeList = new ArrayList<>(10);
+        addOtherCode.forEach((key, value) -> {if (latestCodeList.size() < 10) {latestCodeList.add(value);}});
+        Collections.reverse(latestCodeList);
+
         return new ResponseEntity<>(Map.of("id", String.valueOf(CodeDTO.getInc())), HttpStatus.OK);
     }
 
     @GetMapping("/api/code/latest")
     public ResponseEntity<?> getLatestCodeApi() {
-        latestCodeList = new ArrayList<>(10);
-
-        for (Map<String, String> value : addOtherCode.values()) {
-            if (latestCodeList.size() >= 10) {
-                break;
-            }
-            latestCodeList.add(value);
-        }
-        Collections.reverse(latestCodeList);
         return new ResponseEntity<>(latestCodeList, HttpStatus.OK);
     }
 }
