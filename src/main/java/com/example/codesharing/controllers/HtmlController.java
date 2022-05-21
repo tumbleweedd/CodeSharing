@@ -29,6 +29,11 @@ public class HtmlController {
         }
         return "getCode";
     }
+    @GetMapping("/code/latest")
+    public String getLatestCode(Model model) {
+        model.addAttribute("latestCode", codeShareController.getLatestCodeList());
+        return "getLatestCode";
+    }
 
 
     @GetMapping("/code/new")

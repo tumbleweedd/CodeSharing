@@ -8,13 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @RestController
 public class CodeShareController {
     private final Map<Integer, Map<String, String>> addOtherCode = new LinkedHashMap<>();
+    private List<Map<String, String>> latestCodeList;
     private String code;
     private String data;
 
@@ -24,7 +24,7 @@ public class CodeShareController {
     public ResponseEntity<?> justGetCode(@PathVariable("id") int id) {
         addOtherCode.get(id).forEach((key, value) -> code = key);
         addOtherCode.get(id).forEach((key, value) -> data = value);
-        return new ResponseEntity<>(Map.of("cod", code, "data", data), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("code", code, "date", data), HttpStatus.OK);
     }
 
     @PostMapping("/api/code/new")
@@ -36,7 +36,20 @@ public class CodeShareController {
         getCurrentCode.put(CodeDTO.getCode(), DataTimeClass.getCurrentDateTime());
         addOtherCode.put(CodeDTO.inc(), getCurrentCode);
 
+        return new ResponseEntity<>(Map.of("id", String.valueOf(CodeDTO.getInc())), HttpStatus.OK);
+    }
 
-        return new ResponseEntity<>(Map.of("id", CodeDTO.getInc()), HttpStatus.OK);
+    @GetMapping("/api/code/latest")
+    public ResponseEntity<?> getLatestCodeApi() {
+        latestCodeList = new ArrayList<>(10);
+
+        for (Map<String, String> value : addOtherCode.values()) {
+            if (latestCodeList.size() >= 10) {
+                break;
+            }
+            latestCodeList.add(value);
+        }
+        Collections.reverse(latestCodeList);
+        return new ResponseEntity<>(latestCodeList, HttpStatus.OK);
     }
 }
