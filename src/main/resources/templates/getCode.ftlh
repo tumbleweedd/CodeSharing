@@ -6,6 +6,8 @@
     <title>Code</title>
     <link type="text/css" rel="stylesheet"
           href="https://cdn01.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?themeRevisionID=5f7ed99c2c2c7240ba580251"/>
+    <link href="resources/static/getCodeStyle.css" rel="stylesheet" />
+
     <link type="text/css" rel="stylesheet"
           href="https://cdn02.jotfor.ms/css/styles/payment/payment_styles.css?3.3.33217"/>
     <link type="text/css" rel="stylesheet"
@@ -18,6 +20,9 @@
     #load_date {
         color: lightcoral;
         font-size: 14px;
+    }
+    #code_snippet {
+        color: black;
     }
 </style>
 <div role="main" class="form-all">

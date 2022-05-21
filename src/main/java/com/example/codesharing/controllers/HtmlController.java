@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
+
 @Component
 @Controller
 @Validated
@@ -22,17 +23,10 @@ public class HtmlController {
 
     @GetMapping("/code/{id}")
     public String getCode(@PathVariable("id") int id, Model model) {
-        String code = "";
-        String dataTime = "";
-
         for (Map.Entry<String, String> entry : codeShareController.getAddOtherCode().get(id).entrySet()) {
-            code = entry.getKey();
-            dataTime = entry.getValue();
+            model.addAttribute("code", entry.getKey());
+            model.addAttribute("dataTime", entry.getValue());
         }
-
-        model.addAttribute("code", code);
-        model.addAttribute("dataTime", dataTime);
-
         return "getCode";
     }
 

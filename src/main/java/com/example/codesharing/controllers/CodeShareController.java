@@ -15,12 +15,16 @@ import java.util.Map;
 @RestController
 public class CodeShareController {
     private final Map<Integer, Map<String, String>> addOtherCode = new LinkedHashMap<>();
+    private String code;
+    private String data;
 
 
     @GetMapping("/api/code/{id}")
     @ResponseBody
     public ResponseEntity<?> justGetCode(@PathVariable("id") int id) {
-        return new ResponseEntity<>(getAddOtherCode().get(id), HttpStatus.OK);
+        addOtherCode.get(id).forEach((key, value) -> code = key);
+        addOtherCode.get(id).forEach((key, value) -> data = value);
+        return new ResponseEntity<>(Map.of("cod", code, "data", data), HttpStatus.OK);
     }
 
     @PostMapping("/api/code/new")
@@ -29,10 +33,8 @@ public class CodeShareController {
         DataTimeClass.setLocalDateTime();
         Map<String, String> getCurrentCode = new LinkedHashMap<>();
 
-        getCurrentCode.put("code", CodeDTO.getCode());
-        getCurrentCode.put("data", DataTimeClass.getCurrentDateTime());
-
-        getAddOtherCode().put(CodeDTO.inc(), getCurrentCode);
+        getCurrentCode.put(CodeDTO.getCode(), DataTimeClass.getCurrentDateTime());
+        addOtherCode.put(CodeDTO.inc(), getCurrentCode);
 
 
         return new ResponseEntity<>(Map.of("id", CodeDTO.getInc()), HttpStatus.OK);
