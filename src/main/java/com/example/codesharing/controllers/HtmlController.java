@@ -23,7 +23,6 @@ public class HtmlController {
     }
 
 
-
     @GetMapping("/code/{id}")
     public String getCode(@PathVariable("id") int id, Model model) {
         for (Map.Entry<String, String> entry : codeShareController.getAddOtherCode().get(id).entrySet()) {
@@ -32,12 +31,11 @@ public class HtmlController {
         }
         return "getCode";
     }
+
     @GetMapping("/code/latest")
     public String getLatestCode(Model model) {
         Map<String, String> map = new LinkedHashMap<>();
-        for (Map<String, String> stringMap : codeShareController.getLatestCodeList()) {
-            map.putAll(stringMap);
-        }
+        codeShareController.getLatestCodeList().forEach(map::putAll);
         model.addAttribute("latestCode", map);
         return "getLatestCode";
     }

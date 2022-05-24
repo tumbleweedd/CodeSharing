@@ -17,7 +17,7 @@ public class CodeShareController {
     private final Map<Integer, Map<String, String>> addOtherCode = new LinkedHashMap<>();
 
     private List<Map<String, String>> latestCodeList;
-    private List<Map<String, String>> latestCodeList1;
+    private List<Map<String, String>> helpForLatestCodeList;
 
     private String code;
     private String data;
@@ -41,17 +41,14 @@ public class CodeShareController {
         addOtherCode.put(CodeDTO.inc(), getCurrentCode);
 
         latestCodeList = new ArrayList<>(10);
-        latestCodeList1 = new ArrayList<>();
-        addOtherCode.forEach((key, value) -> latestCodeList1.add(value));
+        helpForLatestCodeList = new ArrayList<>();
+        addOtherCode.forEach((key, value) -> helpForLatestCodeList.add(value));
 
-        Collections.reverse(latestCodeList1);
+        Collections.reverse(helpForLatestCodeList);
 
-        for (Map<String, String> stringStringMap : latestCodeList1) {
-            if (latestCodeList.size() > 9) {
-                break;
-            }
-            latestCodeList.add(stringStringMap);
-        }
+        helpForLatestCodeList.stream()
+                .takeWhile(stringStringMap -> latestCodeList.size() <= 9)
+                .forEach(stringStringMap -> latestCodeList.add(stringStringMap));
 
         return new ResponseEntity<>(Map.of("id", String.valueOf(CodeDTO.getInc())), HttpStatus.OK);
     }
@@ -62,9 +59,7 @@ public class CodeShareController {
         Map<String, String> map = new LinkedHashMap<>();
         List<Map<String, String>> map2 = new LinkedList<>();
 
-        for (Map<String, String> stringStringMap : latestCodeList) {
-            map.putAll(stringStringMap);
-        }
+        latestCodeList.forEach(map::putAll);
         map.forEach((key, value) -> map2.add(Map.of("code", key, "date", value)));
 
         return new ResponseEntity<>(map2, HttpStatus.OK);
