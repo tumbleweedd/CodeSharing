@@ -20,15 +20,14 @@ public class CodeShareController {
     private List<Map<String, String>> helpForLatestCodeList;
 
     private String code;
-    private String data;
-
+    private String date;
 
     @GetMapping("/api/code/{id}")
     @ResponseBody
     public ResponseEntity<?> justGetCode(@PathVariable("id") int id) {
         addOtherCode.get(id).forEach((key, value) -> code = key);
-        addOtherCode.get(id).forEach((key, value) -> data = value);
-        return new ResponseEntity<>(Map.of("code", code, "date", data), HttpStatus.OK);
+        addOtherCode.get(id).forEach((key, value) -> date = value);
+        return new ResponseEntity<>(Map.of("code", code, "date", date), HttpStatus.OK);
     }
 
     @PostMapping("/api/code/new")
