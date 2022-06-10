@@ -2,66 +2,57 @@ package com.example.codesharing.controllers;
 
 import com.example.codesharing.applicationLogic.CodeSnippet;
 import com.example.codesharing.applicationLogic.DataTimeClass;
-import com.example.codesharing.auxiliary.CodeDTO;
+import com.example.codesharing.model.Code;
+import com.example.codesharing.service.CodeSharingServiceImpl;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 @RestController
 public class CodeShareController {
-    private final Map<Integer, Map<String, String>> addOtherCode = new LinkedHashMap<>();
+    private Map<String, String> latestCode = new LinkedHashMap<>();
+    @Autowired
+    private CodeSharingServiceImpl codeSharingService;
 
-    private List<Map<String, String>> latestCodeList;
-    private List<Map<String, String>> helpForLatestCodeList;
-
-    private String code;
-    private String date;
 
     @GetMapping("/api/code/{id}")
     @ResponseBody
     public ResponseEntity<?> justGetCode(@PathVariable("id") int id) {
-        addOtherCode.get(id).forEach((key, value) -> code = key);
-        addOtherCode.get(id).forEach((key, value) -> date = value);
-        return new ResponseEntity<>(Map.of("code", code, "date", date), HttpStatus.OK);
+        var codes = codeSharingService.findCodeById(id);
+        Map<String, String> getCodeById = new LinkedHashMap<>();
+
+        getCodeById.put("code", codes.getCode());
+        getCodeById.put("date", codes.getDate());
+        return new ResponseEntity<>(getCodeById, HttpStatus.OK);
     }
 
     @PostMapping("/api/code/new")
-    public ResponseEntity<?> putCode(@RequestBody CodeSnippet code) {
-        CodeDTO.setCode(code.getCODE());
+    public ResponseEntity<?> putCodeBD(@RequestBody CodeSnippet code) {
+        Code addCode = new Code();
         DataTimeClass.setLocalDateTime();
-        Map<String, String> getCurrentCode = new LinkedHashMap<>();
-
-        getCurrentCode.put(CodeDTO.getCode(), DataTimeClass.getCurrentDateTime());
-        addOtherCode.put(CodeDTO.inc(), getCurrentCode);
-
-        latestCodeList = new ArrayList<>(10);
-        helpForLatestCodeList = new ArrayList<>();
-        addOtherCode.forEach((key, value) -> helpForLatestCodeList.add(value));
-
-        Collections.reverse(helpForLatestCodeList);
-
-        helpForLatestCodeList.stream()
-                .takeWhile(stringStringMap -> latestCodeList.size() <= 9)
-                .forEach(stringStringMap -> latestCodeList.add(stringStringMap));
-
-        return new ResponseEntity<>(Map.of("id", String.valueOf(CodeDTO.getInc())), HttpStatus.OK);
+        addCode.setCode(code.getCODE());
+        addCode.setDate(DataTimeClass.getCurrentDateTime(DataTimeClass.getLocalDateTime()));
+        codeSharingService.save(addCode);
+        return new ResponseEntity<>(Map.of("id", String.valueOf(addCode.getId())), HttpStatus.OK);
     }
+
 
     @JsonCreator
     @GetMapping("/api/code/latest")
-    public ResponseEntity<?> getLatestCodeApi() {
-        Map<String, String> map = new LinkedHashMap<>();
-        List<Map<String, String>> map2 = new LinkedList<>();
-
-        latestCodeList.forEach(map::putAll);
-        map.forEach((key, value) -> map2.add(Map.of("code", key, "date", value)));
-
-        return new ResponseEntity<>(map2, HttpStatus.OK);
+    public ResponseEntity<?> getLatestCodeApiBD() {
+        var latestCode = codeSharingService.readAll();
+        Collections.reverse(latestCode);
+        return new ResponseEntity<>(latestCode.stream().limit(10).collect(Collectors.toList()), HttpStatus.OK);
     }
+
 }
 

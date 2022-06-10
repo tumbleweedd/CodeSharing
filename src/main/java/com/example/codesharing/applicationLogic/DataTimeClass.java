@@ -22,11 +22,11 @@ public class DataTimeClass {
         DataTimeClass.localDateTime = LocalDateTime.now();
     }
 
-    public static String getCurrentDateTime() {
+    public static String getCurrentDateTime(LocalDateTime dateTime) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMATTER);
 
-        return getLocalDateTime().format(formatter);
+        return dateTime.format(formatter);
     }
 
 }
