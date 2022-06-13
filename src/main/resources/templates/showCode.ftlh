@@ -7,7 +7,10 @@
     <link type="text/css" rel="stylesheet"
           href="https://cdn01.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?themeRevisionID=5f7ed99c2c2c7240ba580251"/>
     <link href="resources/static/getCodeStyle.css" rel="stylesheet"/>
-
+    <link rel="stylesheet"
+          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/atom-one-light.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <link type="text/css" rel="stylesheet"
           href="https://cdn02.jotfor.ms/css/styles/payment/payment_styles.css?3.3.33217"/>
     <link type="text/css" rel="stylesheet"
@@ -39,14 +42,19 @@
         </li>
 
         <div id="oneCode">
-            <span id="load_date">
-                    ${date}
-               </span>
+            <span id="load_date">${code.date}</span>
+            <#if code.viewsRestricted == true>
+                <p><b><span id="views_restriction">${code.views}</span></b> more views allowed</p>
+            </#if>
+            <#if code.timeRestricted == true>
+                <p>The code will be available for <b><span id="time_restriction">${code.time}</span></b> seconds</p>
+            </#if>
             <pre id="code_snippet" align="left">
-                    ${codes}
-               </pre>
+                <code>${code.code}</code>
+            </pre>
 
         </div>
+
     </ul>
 </div>
 </body>

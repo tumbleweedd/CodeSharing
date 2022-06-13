@@ -2,19 +2,22 @@ package com.example.codesharing.service;
 
 import com.example.codesharing.model.Code;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CodeSharingService {
     List<Code> readAll();
 
-    boolean delete(Long id);
+    boolean checkExpired(Code code, LocalDateTime currentTime);
 
-    Code save(Code toSave);
+    void delete(Code code);
 
-    Code findCodeById(Integer id);
+    String save(Code toSave);
+
+    Code findCodeById(String id);
 
 
 
 
-    boolean update(Code code, int id);
+    boolean update(Code code, String id);
 }

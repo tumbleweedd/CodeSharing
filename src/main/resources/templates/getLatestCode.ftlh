@@ -3,11 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Code</title>
+    <title>Latest</title>
     <link type="text/css" rel="stylesheet"
           href="https://cdn01.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?themeRevisionID=5f7ed99c2c2c7240ba580251"/>
     <link href="resources/static/getCodeStyle.css" rel="stylesheet"/>
-
+    <link rel="stylesheet"
+          href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/styles/atom-one-light.min.css">
+    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.2.1/build/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
     <link type="text/css" rel="stylesheet"
           href="https://cdn02.jotfor.ms/css/styles/payment/payment_styles.css?3.3.33217"/>
     <link type="text/css" rel="stylesheet"
@@ -41,10 +44,10 @@
         <div id="oneCode">
             <#list latestCode as key, value>
                 <span id="load_date">
-                    ${value}
+                    ${key}
                </span>
                 <pre id="code_snippet" align="left">
-                    ${key}
+                   <code>${value}</code>
                </pre>
             </#list>
 
