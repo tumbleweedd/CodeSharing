@@ -26,7 +26,11 @@
     }
 
     #code_snippet {
-        color: black;
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        border-left: 1px solid;
+        border-right: 1px solid;
+        background: ghostwhite;
     }
 </style>
 <div role="main" class="form-all">
@@ -52,7 +56,6 @@
             <pre id="code_snippet" align="left">
                 <code>${code.code}</code>
             </pre>
-
         </div>
 
     </ul>

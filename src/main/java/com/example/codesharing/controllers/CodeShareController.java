@@ -1,5 +1,6 @@
 package com.example.codesharing.controllers;
 
+import com.example.codesharing.exceptionClass.CodeNotFoundException;
 import com.example.codesharing.model.Code;
 import com.example.codesharing.service.CodeSharingServiceImpl;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -30,9 +31,9 @@ public class CodeShareController {
         Map<String, Object> getCodeByIdMap = new LinkedHashMap<>();
         Code codes = codeSharingService.findCodeById(id);
 
+        if (!codeSharingService.existsCodeById(id)) throw new CodeNotFoundException();
         if (codeSharingService.checkExpired(codes, currentTime)) {
-            codeSharingService.delete(codes);
-            return new ResponseEntity<>(Map.of("error", "Code snippet not found"), HttpStatus.NOT_FOUND);
+            throw new CodeNotFoundException();
         }
 
         getCodeByIdMap.put("code", codes.getCode());

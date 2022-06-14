@@ -1,10 +1,9 @@
 package com.example.codesharing.controllers;
 
+import com.example.codesharing.exceptionClass.CodeNotFoundException;
 import com.example.codesharing.model.Code;
 import com.example.codesharing.service.CodeSharingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,13 +29,13 @@ public class HtmlController {
     public String findCodeDB(@PathVariable("id") String id, Model model) {
         LocalDateTime currentTime = LocalDateTime.now();
         Code codes = codeSharingService.findCodeById(id);
-        if (codeSharingService.checkExpired(codes, currentTime)) {
-            codeSharingService.delete(codes);
-        }
-        ResponseEntity<?> response = new ResponseEntity<>(Map.of("error", "Code snippet not found"), HttpStatus.NOT_FOUND);
-        model.addAttribute("exception", response);
-        model.addAttribute("code", codes);
 
+        if (!codeSharingService.existsCodeById(id)) throw new CodeNotFoundException();
+        if (codeSharingService.checkExpired(codes, currentTime)) {
+            throw new CodeNotFoundException();
+        }
+
+        model.addAttribute("code", codes);
 
         return "showCode";
     }

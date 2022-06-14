@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CodeSharingReposiroty extends CrudRepository<Code, Long> {
     Code findCodeById(String id);
+    boolean existsCodeById(String id);
 
 //    List<Code> findAll();
 //

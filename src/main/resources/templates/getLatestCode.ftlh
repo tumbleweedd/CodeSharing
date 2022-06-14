@@ -26,7 +26,11 @@
     }
 
     #code_snippet {
-        color: black;
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        border-left: 1px solid;
+        border-right: 1px solid;
+        background: ghostwhite;
     }
 </style>
 <div role="main" class="form-all">
@@ -42,15 +46,14 @@
         </li>
 
         <div id="oneCode">
-            <#list latestCode as key, value>
+            <#list latestCode as date, code>
                 <span id="load_date">
-                    ${key}
+                    ${date}
                </span>
                 <pre id="code_snippet" align="left">
-                   <code>${value}</code>
+                   <code>${code}</code>
                </pre>
             </#list>
-
         </div>
     </ul>
 </div>

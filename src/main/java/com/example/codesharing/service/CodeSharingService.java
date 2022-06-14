@@ -16,8 +16,7 @@ public interface CodeSharingService {
 
     Code findCodeById(String id);
 
-
-
+    boolean existsCodeById(String id);
 
     boolean update(Code code, String id);
 }

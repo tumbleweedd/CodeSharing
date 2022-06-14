@@ -26,6 +26,11 @@ public class CodeSharingServiceImpl implements CodeSharingService {
         return codeSharingReposiroty.findCodeById(id);
     }
 
+    @Override
+    public boolean existsCodeById(String id) {
+        return codeSharingReposiroty.existsCodeById(id);
+    }
+
 
     @Override
     public String save(Code toSave) {
@@ -65,12 +70,15 @@ public class CodeSharingServiceImpl implements CodeSharingService {
         if (code.isTimeRestricted()) {
             if (Duration.between(dateTime, currentTime).toSeconds() >= code.getTime()) {
                 expired = true;
+                codeSharingReposiroty.delete(code);
+
             } else {
                 code.setTime((int) (code.getTime() - Duration.between(dateTime, currentTime).toSeconds()));
                 codeSharingReposiroty.save(code);
                 if (code.getTime() <= 0) {
                     code.setTime(0);
-                    expired = true;
+                    codeSharingReposiroty.delete(code);
+
                 }
             }
         }
@@ -78,11 +86,13 @@ public class CodeSharingServiceImpl implements CodeSharingService {
         if (code.isViewsRestricted()) {
             if (code.getViews() <= 0) {
                 expired = true;
+                codeSharingReposiroty.delete(code);
             } else {
                 code.setViews(code.getViews() - 1);
                 codeSharingReposiroty.save(code);
                 if (code.getViews() <= 0) {
-                    expired = true;
+                    codeSharingReposiroty.delete(code);
+
                 }
             }
         }
